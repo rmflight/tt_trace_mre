@@ -21,8 +21,13 @@ f2 <- function(){
   f1(use_f2 = FALSE)
 }
 
-count_env <- new.env()
-count_env$f1 <- 0
+f1_count <- 0
+
+init_f_count <- function(){
+  tt_pos <- match("package:ttTraceMRE", search())
+  assign("f1_count", 0, envir = as.environment(tt_pos))
+}
+
 
 #' add f1
 #'
@@ -31,6 +36,7 @@ count_env$f1 <- 0
 #' @export
 #' @return nothing
 add_f1 <- function(){
-  f1_val <- get("f1", envir = ttTraceMRE:::count_env)
-  assign("f1", f1_val + 1, envir = ttTraceMRE:::count_env)
+  tt_pos <- match("package:ttTraceMRE", search())
+  f1_val <- get("f1_count", envir = as.environment(tt_pos))
+  assign("f1_count", f1_val + 1, pos = tt_pos)
 }
